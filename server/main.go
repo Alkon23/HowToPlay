@@ -28,5 +28,5 @@ func main() {
 	games.GameRoutes(api, db)
 
 	// start listening requests
-	app.Listen(c.Port)
+	app.Listen("localhost" + c.Port)
 }

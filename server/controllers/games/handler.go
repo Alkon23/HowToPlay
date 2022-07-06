@@ -5,14 +5,6 @@ import (
 	"server/models"
 )
 
-type AddGameRequestBody struct {
-	Title string `json:"title"`
-}
-
-type UpdateGameRequestBody struct {
-	Title string `json:"title"`
-}
-
 func (h handler) GetGames(c *fiber.Ctx) error {
 	var games []models.Game
 
@@ -34,6 +26,10 @@ func (h handler) GetGame(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(&game)
 }
 
+type AddGameRequestBody struct {
+	Title string `json:"title"`
+}
+
 func (h handler) AddGame(c *fiber.Ctx) error {
 	body := AddGameRequestBody{}
 
@@ -51,6 +47,11 @@ func (h handler) AddGame(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(&game)
+}
+
+type UpdateGameRequestBody struct {
+	Id    int    `json:"id"`
+	Title string `json:"title"`
 }
 
 func (h handler) UpdateGame(c *fiber.Ctx) error {
@@ -82,4 +83,26 @@ func (h handler) DeleteGame(c *fiber.Ctx) error {
 
 	h.DB.Delete(&game)
 	return c.SendStatus(fiber.StatusOK)
+}
+
+type DeleteGamesRequestBody struct {
+	Ids []int `json:"ids"`
+}
+
+func (h handler) DeleteGames(c *fiber.Ctx) error {
+	body := DeleteGamesRequestBody{}
+
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	ids := body.Ids
+	var games []models.Game
+	if result := h.DB.Where("id IN ?", ids).Find(&games); result.Error != nil || len(games) == 0 {
+		return fiber.NewError(fiber.StatusNotFound, result.Error.Error())
+	}
+
+	h.DB.Delete(&games)
+
+	return c.Status(fiber.StatusOK).JSON(ids)
 }

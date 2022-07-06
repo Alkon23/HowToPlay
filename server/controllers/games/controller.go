@@ -17,5 +17,6 @@ func GameRoutes(api fiber.Router, db *gorm.DB) {
 	routes.Get("/", h.GetGames)
 	routes.Get("/:id", h.GetGame)
 	routes.Put("/:id", h.UpdateGame)
+	routes.Delete("/", h.DeleteGames)
 	routes.Delete("/:id", h.DeleteGame)
 }

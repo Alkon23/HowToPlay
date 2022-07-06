@@ -1,0 +1,26 @@
+table {
+  width: 100%;
+}
+
+.table-button-container {
+  padding-bottom: 16px;
+}
+
+.table-button + .table-button {
+  margin-left: 8px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-column-select {
+  width: 32px;
+  border-right: 1px solid #CCC;
+}
+
+.mat-column-id {
+  padding-left: 20px;
+  width: 100px;
+}
